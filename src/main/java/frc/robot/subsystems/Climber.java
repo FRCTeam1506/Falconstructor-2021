@@ -6,17 +6,18 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
 
     private DoubleSolenoid arm = new DoubleSolenoid(2,3);
-    private TalonFX leftClimber = new TalonFX(Constants.Climber.LEFT_CLIMBER_ID.getID());
-    private TalonFX rightClimber = new TalonFX(Constants.Climber.RIGHT_CLIMBER_ID.getID());
+    private TalonFX leftClimber = new TalonFX(Constants.Climber.LEFT_CLIMBER_ID);
+    private TalonFX rightClimber = new TalonFX(Constants.Climber.RIGHT_CLIMBER_ID);
 
     public Climber() {
         this.leftClimber.setInverted(true);
@@ -43,7 +44,7 @@ public class Climber extends SubsystemBase {
 
         DEFAULT();
         reset();
-        // dashboard();
+        dashboard();
     }
 
     public void DEFAULT() {
@@ -105,14 +106,6 @@ public class Climber extends SubsystemBase {
         return this.arm.get();
     }
 
-    // public TalonFX getLeftClimber() {
-    //     return this.leftClimber;
-    // }
-
-    // public TalonFX getRightClimber() {
-    //     return this.rightClimber;
-    // }
-
     public void reset() {
         this.leftClimber.setSelectedSensorPosition(0);
         this.rightClimber.setSelectedSensorPosition(0);
@@ -120,15 +113,13 @@ public class Climber extends SubsystemBase {
 
     private void dashboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Climber");
-        tab.addNumber("Left Encoder", () -> this.leftClimber.getSelectedSensorPosition());
-        tab.addNumber("Right Encoder", () -> this.rightClimber.getSelectedSensorPosition());
+        tab.add(this);
+        tab.addNumber("Left Encoder", () -> this.leftClimber.getSelectedSensorPosition()).withWidget(BuiltInWidgets.kGraph);
+        tab.addNumber("Right Encoder", () -> this.rightClimber.getSelectedSensorPosition()).withWidget(BuiltInWidgets.kGraph);
         tab.addString("Arm State", () -> this.getState().toString());
     }
 
     @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Left Encoder", this.leftClimber.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Right Encoder", this.rightClimber.getSelectedSensorPosition());
-    }
+    public void periodic() {}
 
 }

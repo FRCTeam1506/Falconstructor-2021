@@ -4,22 +4,19 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 
-    public TalonFX shooter1 = new TalonFX(Constants.Shooter.SHOOTER_1_ID.getID());
-    public TalonFX shooter2 = new TalonFX(Constants.Shooter.SHOOTER_2_ID.getID());
+    public TalonFX shooter1 = new TalonFX(Constants.Shooter.SHOOTER_1_ID);
+    public TalonFX shooter2 = new TalonFX(Constants.Shooter.SHOOTER_2_ID);
 
     private Double velocity;
-
-    private NetworkTableEntry voltageWidget, velocityWidget;
 
     public Shooter() {
         
@@ -87,31 +84,18 @@ public class Shooter extends SubsystemBase {
         this.setPower(0.0);
     }
 
-    private Double getWheelVelocity() {
-        return this.velocity;
-    }
-
     private void dashboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
         tab.add(this);
-        tab.addNumber("Power", () -> this.shooter1.getMotorOutputPercent());
-        tab.addNumber("Velocity", () -> this.shooter1.getSelectedSensorVelocity());
-        tab.addNumber("Error", () -> this.shooter1.getClosedLoopError());
-
-        voltageWidget = tab.add("Voltage", 0.0).withWidget("Graph").getEntry();
-        velocityWidget = tab.add("Velocity2", 0.0).withWidget(BuiltInWidgets.kGraph).getEntry();
+        tab.addNumber("Voltage", () -> this.shooter1.getStatorCurrent()).withWidget(BuiltInWidgets.kGraph);
+        tab.addNumber("Velocity", () -> this.shooter1.getSelectedSensorVelocity()).withWidget(BuiltInWidgets.kGraph);
+        tab.addNumber("Power", () -> this.shooter1.getMotorOutputPercent()).withWidget(BuiltInWidgets.kGraph);
+        tab.addNumber("Error", () -> this.shooter1.getClosedLoopError()).withWidget(BuiltInWidgets.kGraph);
     }
 
     @Override
     public void periodic() {
         this.velocity = (double) this.shooter1.getSelectedSensorVelocity() / Constants.Shooter.SHOOTER_TICKS_PER_REV;
-
-        SmartDashboard.putNumber("[Shooter]-Power", this.shooter1.getMotorOutputPercent());
-        SmartDashboard.putNumber("[Shooter]-Velocity", this.shooter1.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("[Shooter]-Error", this.shooter1.getClosedLoopError());
-
-        voltageWidget.setNumber(this.shooter1.getStatorCurrent());
-        velocityWidget.setNumber(this.shooter1.getSelectedSensorVelocity());
     }
 
 }

@@ -36,10 +36,10 @@ public class DriveStraight extends CommandBase {
 
     @Override
     public void execute() {
-        m_drivetrain.setTargetHeading(m_drivetrain.getTargetHeading() + RobotContainer.driver.getRawAxis(Constants.Playstation.RightXAxis.getID()) * 1.8);
-        // m_targetHeading = m_targetHeading + RobotContainer.driver.getRawAxis(Constants.Playstation.RightXAxis.getID()) * 0.8;
-        m_rot = RobotContainer.driver.getRawAxis(Constants.Playstation.RightXAxis.getID());
-        m_fwd = RobotContainer.driver.getRawAxis(Constants.Playstation.LeftYAxis.getID());
+        m_drivetrain.setTargetHeading(m_drivetrain.getTargetHeading() + RobotContainer.driver.getRawAxis(Constants.Playstation.RightXAxis) * 1.8);
+        // m_targetHeading = m_targetHeading + RobotContainer.driver.getRawAxis(Constants.Playstation.RightXAxis) * 0.8;
+        m_rot = RobotContainer.driver.getRawAxis(Constants.Playstation.RightXAxis);
+        m_fwd = RobotContainer.driver.getRawAxis(Constants.Playstation.LeftYAxis);
         double error = m_drivetrain.getTargetHeading() - -m_drivetrain.getHeading();
         if(error > 180) { error = error - 360; }
         else if(error < -180) { error = error + 360; }

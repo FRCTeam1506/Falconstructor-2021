@@ -6,21 +6,21 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
-    private final TalonFX intake = new TalonFX(Constants.Intake.INTAKE_ID.getID());
-    private final Solenoid xfactor = new Solenoid(Constants.Intake.XFACTOR_ID.getID());
+    private final TalonFX intake = new TalonFX(Constants.Intake.INTAKE_ID);
+    private final Solenoid xfactor = new Solenoid(Constants.Intake.XFACTOR_ID);
 
     public Intake() {
         this.intake.configFactoryDefault();
         this.intake.setInverted(false);
 
-        // dashboard();
+        dashboard();
     }
 
     public void intakeFwd() {
@@ -57,11 +57,10 @@ public class Intake extends SubsystemBase {
 
     private void dashboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Intake");
-        tab.addString("State", () -> this.getState());
+        tab.add(this);
+        tab.addBoolean("State", () -> this.xfactor.get()).withWidget(BuiltInWidgets.kBooleanBox);
     }
 
     @Override
-    public void periodic() {
-        SmartDashboard.putString("[Intake]-Xfactor-State", getState());
-    }
+    public void periodic() {}
 }

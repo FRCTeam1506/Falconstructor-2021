@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HorizIndexer extends SubsystemBase {
 
-    private final TalonFX leftIndexer = new TalonFX(Constants.HorizIndexer.LEFT_INDEXER_ID.getID());
-    private final TalonFX rightIndexer = new TalonFX(Constants.HorizIndexer.RIGHT_INDEXER_ID.getID());
+    private final TalonFX leftIndexer = new TalonFX(Constants.HorizIndexer.LEFT_INDEXER_ID);
+    private final TalonFX rightIndexer = new TalonFX(Constants.HorizIndexer.RIGHT_INDEXER_ID);
 
     private SupplyCurrentLimitConfiguration supplyCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(true, 20.0, 20.0, 0);
 

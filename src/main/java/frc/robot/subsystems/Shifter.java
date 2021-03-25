@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shifter extends SubsystemBase {
@@ -11,7 +10,7 @@ public class Shifter extends SubsystemBase {
     private final Solenoid shifter = new Solenoid(0);
 
     public Shifter() {
-        // dashboard();
+        dashboard();
     }
 
     public void setToLowGear() {
@@ -28,11 +27,10 @@ public class Shifter extends SubsystemBase {
 
     private void dashboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Shifter");
-        tab.addString("State", () -> getState());
+        tab.add(this);
+        tab.addString("State", () -> this.getState());
     }
 
     @Override
-    public void periodic() {
-        SmartDashboard.putString("[Shifter]-Gear", getState());
-    }
+    public void periodic() {}
 }
