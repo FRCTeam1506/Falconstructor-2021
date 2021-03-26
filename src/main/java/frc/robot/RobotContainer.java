@@ -2,9 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import frc.robot.Constants.Auto.Goal;
 import frc.robot.Constants.Auto.Position;
+
 import frc.robot.commands.Auton.RamseteTriggers;
 import frc.robot.commands.Climber.Control;
 import frc.robot.commands.Climber.Extend;
@@ -49,6 +47,7 @@ import frc.robot.commands.Shifter.SetToLowGear;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.StopShooter;
 import frc.robot.commands.VertIndexer.StopVertIndexer;
+
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HorizIndexer;
@@ -118,7 +117,7 @@ public class RobotContainer {
     //? Driver Controls
     new JoystickButton(driver, Constants.Playstation.TriangleButton).whenPressed(alignCommand.withTimeout(3.0));
     new JoystickButton(driver, Constants.Playstation.XButton).whileHeld(horizontalIndexCommand);
-    new JoystickButton(driver, Constants.Playstation.LeftBumper).whileHeld(setToLowGearCommand);
+    new JoystickButton(driver, Constants.Playstation.LeftBumper).whileHeld(new SetToLowGear(shifter));
     new JoystickButton(driver, Constants.Playstation.RightBumper).whileHeld(extendAndIntake);
 
     //? Operator Controls
