@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -15,8 +16,11 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import frc.robot.Constants.Auto.Goal;
 import frc.robot.Constants.Auto.Position;
-
+import frc.robot.commands.Auton.LeftAuton;
+import frc.robot.commands.Auton.MiddleAuton;
+import frc.robot.commands.Auton.Nothing;
 import frc.robot.commands.Auton.RamseteTriggers;
+import frc.robot.commands.Auton.RightAuton;
 import frc.robot.commands.Climber.Control;
 import frc.robot.commands.Climber.Extend;
 import frc.robot.commands.Climber.Retract;
@@ -210,69 +214,69 @@ public class RobotContainer {
     this.Six_Ball_2 = TrajectoryLoader.loadTrajectoryFromFile("2_to-front-trench");
   }
 
-  public Command getAutonomousCommand() {
-    //? Reset Sensors
-    // drivetrain.resetEncoders();
-    // drivetrain.resetGyro();
-    // String name = "work";
-    // drivetrain.resetOdometry(TrajectoryLoader.loadTrajectoryFromFile(name).getInitialPose());
-    // System.out.println(TrajectoryLoader.loadTrajectoryFromFile(name).getInitialPose());
-
-    // return standardRamseteRevCommand(name);
-    // return test6Ball2();
-    return new RamseteTriggers(drivetrain, intake);
-
-    // return new ParallelCommandGroup(
-    //   new DefaultSetToHighGear(shifter),
-    //   // test_fwd()
-    //   // standardRamseteCommand("fwd")
-    //   standardRamseteRevCommand("fwd")
-      // new RamseteCommand(
-      //   TrajectoryLoader.loadTrajectoryFromFile("u_curve_rev"),
-      //   drivetrain::getPose,
-      //   new RamseteController(),
-      //   new SimpleMotorFeedforward(
-      //     Constants.Drivetrain.kS,
-      //     Constants.Drivetrain.kV,
-      //     Constants.Drivetrain.kA
-      //   ),
-      //   Constants.Drivetrain.kDriveKinematics,
-      //   drivetrain::getWheelSpeedsRev,
-      //   new PIDController(1.1, 0.01, 0.15),
-      //   new PIDController(1.5, 0.01, 0.05),
-      //   drivetrain::tankDriveVoltsRev,
-      //   drivetrain
-      // )
-    // );
-  }
-
-
   // public Command getAutonomousCommand() {
   //   //? Reset Sensors
-  //   drivetrain.resetEncoders();
-  //   drivetrain.resetGyro();
+  //   // drivetrain.resetEncoders();
+  //   // drivetrain.resetGyro();
+  //   // String name = "work";
+  //   // drivetrain.resetOdometry(TrajectoryLoader.loadTrajectoryFromFile(name).getInitialPose());
+  //   // System.out.println(TrajectoryLoader.loadTrajectoryFromFile(name).getInitialPose());
 
-  //   Position pos = positionChooser.getSelected();
-  //   Goal goal = goalChooser.getSelected();
+  //   // return standardRamseteRevCommand(name);
+  //   // return test6Ball2();
+  //   return new RamseteTriggers(drivetrain, intake);
 
-  //   if (pos == Position.Nothing) return new Nothing();
-    
-  //   else if (pos == Position.Left) { 
-  //     if (goal == Goal.Safe) return new LeftAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter);
-  //     else if (goal == Goal.Ambitious) return test5Ball();
-  //   }
-
-  //   else if (pos == Position.Middle) return new MiddleAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
-
-  //   else if (pos == Position.Right) { 
-  //     if (goal == Goal.Safe) return new RightAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
-  //     else if (goal == Goal.Ambitious) return test6Ball();
-  //   }
-
-  //   else return new Nothing();
-
-  //   return new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0));
+  //   // return new ParallelCommandGroup(
+  //   //   new DefaultSetToHighGear(shifter),
+  //   //   // test_fwd()
+  //   //   // standardRamseteCommand("fwd")
+  //   //   standardRamseteRevCommand("fwd")
+  //     // new RamseteCommand(
+  //     //   TrajectoryLoader.loadTrajectoryFromFile("u_curve_rev"),
+  //     //   drivetrain::getPose,
+  //     //   new RamseteController(),
+  //     //   new SimpleMotorFeedforward(
+  //     //     Constants.Drivetrain.kS,
+  //     //     Constants.Drivetrain.kV,
+  //     //     Constants.Drivetrain.kA
+  //     //   ),
+  //     //   Constants.Drivetrain.kDriveKinematics,
+  //     //   drivetrain::getWheelSpeedsRev,
+  //     //   new PIDController(1.1, 0.01, 0.15),
+  //     //   new PIDController(1.5, 0.01, 0.05),
+  //     //   drivetrain::tankDriveVoltsRev,
+  //     //   drivetrain
+  //     // )
+  //   // );
   // }
+
+
+  public Command getAutonomousCommand() {
+    //? Reset Sensors
+    drivetrain.resetEncoders();
+    drivetrain.resetGyro();
+
+    Position pos = positionChooser.getSelected();
+    Goal goal = goalChooser.getSelected();
+
+    if (pos == Position.Nothing) return new Nothing();
+    
+    else if (pos == Position.Left) { 
+      if (goal == Goal.Safe) return new LeftAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter);
+      // else if (goal == Goal.Ambitious) return test5Ball();
+    }
+
+    else if (pos == Position.Middle) return new MiddleAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
+
+    else if (pos == Position.Right) { 
+      if (goal == Goal.Safe) return new RightAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
+      else if (goal == Goal.Ambitious) return test6Ball();
+    }
+
+    else return new Nothing();
+
+    return new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0));
+  }
 
   public Command test6Ball2() {                              // 0.67
     return new TankDrive(drivetrain, -0.87, -0.87).withTimeout(0.58).andThen(new Shoot(shooter, 20000.0).withTimeout(0.01)

@@ -39,8 +39,8 @@ public final class Constants {
     public static final class Drivetrain {
         public static final Integer LEFT_DRIVE_MASTER_ID = 0;
         public static final Integer LEFT_DRIVE_ID = 1;
-        public static final Integer RIGHT_DRIVE_MASTER_ID = 14;
-        public static final Integer RIGHT_DRIVE_ID = 15;
+        public static final Integer RIGHT_DRIVE_MASTER_ID = 15;
+        public static final Integer RIGHT_DRIVE_ID = 14;
 
         public static final Double LEFT_TICKS_PER_REV = 79675.000000 / Units.inchesToMeters(75); // 18600.0
         public static final Double RIGHT_TICKS_PER_REV = 84660.000000 / Units.inchesToMeters(81); // 9326 19500.0
