@@ -17,7 +17,7 @@ public class Align extends PIDCommand {
             drivetrain::getX,
             2.0,
             output -> {
-                System.out.println(-output);
+                // System.out.println(-output);
                 drivetrain.regArcadeDrive(0, -output);
             },
             drivetrain
@@ -39,7 +39,7 @@ public class Align extends PIDCommand {
             drivetrain::getX,
             targetXError,
             output -> {
-                System.out.println(-output);
+                // System.out.println(-output);
                 drivetrain.regArcadeDrive(0, -output);
             },
             drivetrain

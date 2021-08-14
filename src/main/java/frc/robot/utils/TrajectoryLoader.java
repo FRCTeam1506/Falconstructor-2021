@@ -20,7 +20,7 @@ import frc.robot.Constants;
 public class TrajectoryLoader {
 
     public static Trajectory loadTrajectoryFromFile(String filename) {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("output/" + filename + ".wpilib.json");
+        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/" + filename + ".wpilib.json");
         Trajectory trajectory = null;
 
         try {

@@ -38,6 +38,6 @@ public class AutoTrigger extends CommandBase {
             System.out.println("### EXTENDED ###");
         }
 
-        System.out.println(drivetrainPose.get().getX());
+        // System.out.println(drivetrainPose.get().getX());
     }
 }

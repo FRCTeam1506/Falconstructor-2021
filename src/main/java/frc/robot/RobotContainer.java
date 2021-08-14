@@ -20,6 +20,7 @@ import frc.robot.commands.Auton.LeftAuton;
 import frc.robot.commands.Auton.MiddleAuton;
 import frc.robot.commands.Auton.Nothing;
 import frc.robot.commands.Auton.RamseteTriggers;
+import frc.robot.commands.Auton.Right6Ball;
 import frc.robot.commands.Auton.RightAuton;
 import frc.robot.commands.Climber.Control;
 import frc.robot.commands.Climber.Extend;
@@ -98,7 +99,7 @@ public class RobotContainer {
   private final Command retractCommand = new Retract(climber);
   private static final Command d_driveStraight = new DriveStraight(drivetrain);
 
-  private Trajectory Six_Ball_1, Six_Ball_2;
+  public static Trajectory Six_Ball_1, Six_Ball_2;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -110,11 +111,11 @@ public class RobotContainer {
     //? Set Default Commands
     setDefaultCommands();
 
-    //? Setup Auton Chooser
-    setupAutonChooser();
-
     //? Create Trajectories
     createTrajectories();
+
+    //? Setup Auton Chooser
+    setupAutonChooser();
   }
 
   private void configureButtonBindings() {
@@ -210,8 +211,11 @@ public class RobotContainer {
   }
 
   private void createTrajectories() {
-    this.Six_Ball_1 = TrajectoryLoader.loadTrajectoryFromFile("1_u-turn");
-    this.Six_Ball_2 = TrajectoryLoader.loadTrajectoryFromFile("2_to-front-trench");
+    // Six_Ball_1 = TrajectoryLoader.loadTrajectoryFromFile("1_u-turn");
+    // Six_Ball_2 = TrajectoryLoader.loadTrajectoryFromFile("2_to-front-trench");
+
+    Six_Ball_1 = TrajectoryLoader.loadTrajectoryFromFile("1_j-turn");
+    Six_Ball_2 = TrajectoryLoader.loadTrajectoryFromFile("2_j-turn");
   }
 
   // public Command getAutonomousCommand() {
@@ -268,9 +272,9 @@ public class RobotContainer {
 
     else if (pos == Position.Middle) return new MiddleAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
 
-    else if (pos == Position.Right) { 
+    else if (pos == Position.Right) {
       if (goal == Goal.Safe) return new RightAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
-      else if (goal == Goal.Ambitious) return test6Ball();
+      else if (goal == Goal.Ambitious) return new Right6Ball(drivetrain, intake, horizIndexer, vertIndexer, shooter); // test6Ball();
     }
 
     else return new Nothing();
@@ -293,11 +297,11 @@ public class RobotContainer {
           new StopIntakeIntake(intake)
         ).withTimeout(0.01)
       ).andThen(
-        () -> drivetrain.resetOdometry(this.Six_Ball_1.getInitialPose())
+        () -> drivetrain.resetOdometry(Six_Ball_1.getInitialPose())
       ).andThen(
         new ParallelCommandGroup(
           new ExtendAndIntake(intake).withTimeout(5.0),
-          new StandardRamsete(drivetrain, this.Six_Ball_1)
+          new StandardRamsete(drivetrain, Six_Ball_1)
         ).withTimeout(7.0)
       ).andThen(new frc.robot.commands.Intake.Retract(intake).withTimeout(0.01)
       ).andThen(new Shoot(shooter, 20000.0).withTimeout(0.87)
@@ -347,19 +351,19 @@ public class RobotContainer {
           new StopIntakeIntake(intake)
         ).withTimeout(0.01)
       ).andThen(
-        () -> drivetrain.resetOdometry(this.Six_Ball_1.getInitialPose())
+        () -> drivetrain.resetOdometry(Six_Ball_1.getInitialPose())
       ).andThen(
         new ParallelCommandGroup(
           new ExtendAndIntake(intake).withTimeout(5.0),
-          new StandardRamsete(drivetrain, this.Six_Ball_1)
+          new StandardRamsete(drivetrain, Six_Ball_1)
         ).withTimeout(7.0)
       ).andThen(new frc.robot.commands.Intake.Retract(intake).withTimeout(0.01)
       ).andThen(
           new TurnToAngleProfiled(drivetrain, -180)
       ).andThen(
-        () -> drivetrain.resetOdometry(this.Six_Ball_2.getInitialPose()))
+        () -> drivetrain.resetOdometry(Six_Ball_2.getInitialPose()))
       ).andThen(
-        new FastRamsete(drivetrain, this.Six_Ball_2)
+        new FastRamsete(drivetrain, Six_Ball_2)
       ).andThen(
         new ParallelCommandGroup(
           new Align(drivetrain, 1.0).withTimeout(3.0),
