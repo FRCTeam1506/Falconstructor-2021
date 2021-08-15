@@ -16,12 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 import frc.robot.Constants.Auto.Goal;
 import frc.robot.Constants.Auto.Position;
-import frc.robot.commands.Auton.LeftAuton;
-import frc.robot.commands.Auton.MiddleAuton;
-import frc.robot.commands.Auton.Nothing;
-import frc.robot.commands.Auton.RamseteTriggers;
-import frc.robot.commands.Auton.Right6Ball;
-import frc.robot.commands.Auton.RightAuton;
 import frc.robot.commands.Climber.Control;
 import frc.robot.commands.Climber.Extend;
 import frc.robot.commands.Climber.Retract;
@@ -52,7 +46,16 @@ import frc.robot.commands.Shifter.SetToLowGear;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.StopShooter;
 import frc.robot.commands.VertIndexer.StopVertIndexer;
-
+import frc.robot.commands.auton.LeftSimple;
+import frc.robot.commands.auton.MiddleSimple;
+import frc.robot.commands.auton.Nothing;
+import frc.robot.commands.auton.Right6Ball;
+import frc.robot.commands.auton.RightSimple;
+import frc.robot.commands.defaults.HorizIndexer_Stop;
+import frc.robot.commands.defaults.Intake_RetractAndStop;
+import frc.robot.commands.defaults.Shifter_SetToHighGear;
+import frc.robot.commands.defaults.Shooter_Stop;
+import frc.robot.commands.defaults.VertIndexer_Stop;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HorizIndexer;
@@ -165,23 +168,23 @@ public class RobotContainer {
     // );
 
     shifter.setDefaultCommand(
-      new DefaultSetToHighGear(shifter)
+      new Shifter_SetToHighGear(shifter)
     );
 
     shooter.setDefaultCommand(
-      new StopShooter(shooter)
+      new Shooter_Stop(shooter)
     );
 
     intake.setDefaultCommand(
-      new IntakeDefault(intake)
+      new Intake_RetractAndStop(intake)
     );
 
     horizIndexer.setDefaultCommand(
-      new StopHorizIndexer(horizIndexer)
+      new HorizIndexer_Stop(horizIndexer)
     );
 
     vertIndexer.setDefaultCommand(
-      new StopVertIndexer(vertIndexer)
+      new VertIndexer_Stop(vertIndexer)
     );
 
     climber.setDefaultCommand(
@@ -266,15 +269,20 @@ public class RobotContainer {
     if (pos == Position.Nothing) return new Nothing();
     
     else if (pos == Position.Left) { 
-      if (goal == Goal.Safe) return new LeftAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter);
+      if (goal == Goal.Safe) return new LeftSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter);
       // else if (goal == Goal.Ambitious) return test5Ball();
     }
 
-    else if (pos == Position.Middle) return new MiddleAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
+    else if (pos == Position.Middle) return new MiddleSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
 
     else if (pos == Position.Right) {
-      if (goal == Goal.Safe) return new RightAuton(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
-      else if (goal == Goal.Ambitious) return new Right6Ball(drivetrain, intake, horizIndexer, vertIndexer, shooter); // test6Ball();
+      if (goal == Goal.Safe) return new RightSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
+      else if (goal == Goal.Ambitious) {
+        Trajectory first  = TrajectoryLoader.loadTrajectoryFromFile("j_turn-1");
+        Trajectory second = TrajectoryLoader.loadTrajectoryFromFile("j_turn-2");
+
+        return new Right6Ball(drivetrain, intake, horizIndexer, vertIndexer, shooter, first, second);
+      }
     }
 
     else return new Nothing();

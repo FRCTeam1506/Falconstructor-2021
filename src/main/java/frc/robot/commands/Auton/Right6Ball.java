@@ -1,16 +1,14 @@
-package frc.robot.commands.Auton;
+package frc.robot.commands.auton;
 
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import frc.robot.RobotContainer;
 import frc.robot.commands.Drivetrain.Align;
 import frc.robot.commands.Drivetrain.FastRamsete;
 import frc.robot.commands.Drivetrain.StandardRamsete;
 import frc.robot.commands.Drivetrain.TankDrive;
-import frc.robot.commands.Drivetrain.TurnToAngleProfiled;
 import frc.robot.commands.HorizIndexer.StopHorizIndexer;
 import frc.robot.commands.Intake.ExtendAndIntake;
 import frc.robot.commands.Intake.Retract;
@@ -25,7 +23,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.VertIndexer;
 
 public class Right6Ball extends SequentialCommandGroup {
-    public Right6Ball(Drivetrain drivetrain, Intake intake, HorizIndexer horizIndexer, VertIndexer vertIndexer, Shooter shooter) {
+    public Right6Ball(Drivetrain drivetrain, Intake intake, HorizIndexer horizIndexer, VertIndexer vertIndexer, Shooter shooter, Trajectory firstTrajectory, Trajectory secondTrajectory) {
         super(
             // ? Drive backwards to get better angle for shooting
             new TankDrive(drivetrain, -0.5, -0.5).withTimeout(1.00),
@@ -45,28 +43,22 @@ public class Right6Ball extends SequentialCommandGroup {
             ).withTimeout(0.01),
 
             // ? Reset odometry for running path route
-            new InstantCommand(() -> drivetrain.resetOdometry(RobotContainer.Six_Ball_1.getInitialPose()), drivetrain),
+            new InstantCommand(() -> drivetrain.resetOdometry(firstTrajectory.getInitialPose()), drivetrain),
 
             // ? Run intake and drive path
             new ParallelCommandGroup(
                 new ExtendAndIntake(intake).withTimeout(5.0),
-                new StandardRamsete(drivetrain, RobotContainer.Six_Ball_1)
+                new StandardRamsete(drivetrain, firstTrajectory)
             ).withTimeout(7.0),
 
             // ? Retract intake
             new Retract(intake).withTimeout(0.01),
 
-            // ? Turn around
-            // new TurnToAngleProfiled(drivetrain, -180).withTimeout(3.0),
-
-            // new PrintCommand("Made it ................."),
-            // System.out.println("Made it ..............................."),
-
             // ? Reset odometry for running path route
-            new InstantCommand(() -> drivetrain.resetOdometry(RobotContainer.Six_Ball_2.getInitialPose()), drivetrain),
+            new InstantCommand(() -> drivetrain.resetOdometry(secondTrajectory.getInitialPose()), drivetrain),
 
             // ? Drive path
-            new FastRamsete(drivetrain, RobotContainer.Six_Ball_2),
+            new FastRamsete(drivetrain, secondTrajectory),
 
             // ? Align and shoot
             new ParallelCommandGroup(
