@@ -1,6 +1,5 @@
 package frc.robot.commands.Drivetrain;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
