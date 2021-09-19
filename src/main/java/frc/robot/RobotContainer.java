@@ -88,7 +88,7 @@ public class RobotContainer {
   protected static final Climber climber = new Climber();
 
   private SendableChooser<Constants.Auto.Position> positionChooser = new SendableChooser<>();
-  private SendableChooser<Constants.Auto.Goal> goalChooser = new SendableChooser<>();
+  // private SendableChooser<Constants.Auto.Goal> goalChooser = new SendableChooser<>();
 
   protected final Command test = new TestMaster(drivetrain, shifter, intake, horizIndexer, vertIndexer, shooter);
   private final Command extendAndIntake = new ExtendAndIntake(intake);
@@ -206,16 +206,16 @@ public class RobotContainer {
     Shuffleboard.getTab("Autonomous").add("Position", positionChooser);
 
     //? Goal Auton Chooser
-    goalChooser.setDefaultOption("Safe", Goal.Safe);
-    goalChooser.addOption("Ambitious", Goal.Ambitious);
-    Shuffleboard.getTab("Autonomous").add("Goal", goalChooser);
+    // goalChooser.setDefaultOption("Safe", Goal.Safe);
+    // goalChooser.addOption("Ambitious", Goal.Ambitious);
+    // Shuffleboard.getTab("Autonomous").add("Goal", goalChooser);
   }
 
   private void createTrajectories() {
     // ? Six Ball (Right) Auton
     Six_Ball_Right_1  = TrajectoryLoader.loadTrajectoryFromFile("sb-r-1");
     Six_Ball_Right_2  = TrajectoryLoader.loadTrajectoryFromFile("sb-r-2");
-    Six_Ball_Right_3  = TrajectoryLoader.loadTrajectoryFromFile("sb-r-3");
+    Six_Ball_Right_3  = TrajectoryLoader.loadTrajectoryFromFile("text");
 
     // ? Six Ball (Left) Auton
 
@@ -265,27 +265,22 @@ public class RobotContainer {
     drivetrain.resetGyro();
 
     Position pos = positionChooser.getSelected();
-    Goal goal = goalChooser.getSelected();
 
     if (pos == Position.Nothing) return new Nothing();
     
     else if (pos == Position.Left) { 
-      if (goal == Goal.Safe) return new LeftSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter);
-      // else if (goal == Goal.Ambitious) return test5Ball();
+      return new LeftSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter);
     }
 
-    else if (pos == Position.Middle) return new MiddleSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
+    else if (pos == Position.Middle) {
+      return new MiddleSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
+    }
 
     else if (pos == Position.Right) {
-      if (goal == Goal.Safe) return new RightSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
-      else if (goal == Goal.Ambitious) {
-        return new Right6Ball(drivetrain, intake, horizIndexer, vertIndexer, shooter, Six_Ball_Right_1, Six_Ball_Right_2, Six_Ball_Right_3);
-      }
+      return new RightSimple(drivetrain, intake, horizIndexer, vertIndexer, shooter); 
     }
 
-    else return new Nothing();
-
-    return new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0));
+    else return new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0));
   }
 
   // public Command test6Ball2() {                              // 0.67

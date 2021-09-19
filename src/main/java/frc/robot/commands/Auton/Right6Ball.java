@@ -64,7 +64,7 @@ public class Right6Ball extends SequentialCommandGroup {
             // ? Align and shoot
             new ParallelCommandGroup(
                 new Align(drivetrain, 0.5),
-                new IndexAndShoot(intake, horizIndexer, vertIndexer, shooter, 2.0, 20000.0)
+                new IndexAndShoot(intake, horizIndexer, vertIndexer, shooter, 2.0, 13_000.0) // 20000.0
             ).withTimeout(5.5)
         );
     }
